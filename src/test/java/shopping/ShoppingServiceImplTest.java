@@ -157,10 +157,12 @@ class ShoppingServiceImplTest {
         Cart cart = shoppingService.getCart(testCustomer);
         cart.add(testProduct,3);
         cart.add(testProduct,3);
+        shoppingService.buy(cart);
         } catch (Exception exc){
-            Mockito.verify(productDaoMock, Mockito.never())
-                    .save(Mockito.any(Product.class));
+
             Assertions.assertEquals(BuyException.class, exc.getClass());
         }
+        Mockito.verify(productDaoMock, Mockito.never())
+                .save(Mockito.any(Product.class));
     }
 }
