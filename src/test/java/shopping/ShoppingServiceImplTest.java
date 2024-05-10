@@ -148,6 +148,9 @@ class ShoppingServiceImplTest {
                 .save(Mockito.eq(testProduct));
     }
 
+    /**
+     * при добавлении несколькими приемами большего числа продуктов, чем есть в наличии, покупка не должна происходить
+     */
     @Test
     void notSaveWhenSumMoreThanHave(){
         try {
