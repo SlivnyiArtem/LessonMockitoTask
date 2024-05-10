@@ -50,7 +50,6 @@ class ShoppingServiceImplTest {
      */
     @Test
     void getSameCart(){
-//        Customer customer = new Customer(1L, "11-11-11");
         Cart customerCart = shoppingService.getCart(testCustomer);
         Assertions.assertEquals(customerCart, shoppingService.getCart(testCustomer));
     }
@@ -108,7 +107,7 @@ class ShoppingServiceImplTest {
     }
 
     /**
-     * проверка неудачного завершения операции покупки при пустой корзине
+     * проверка отсутствия покупки и исключения при пустой корзине
      */
     @Test
     void notBuyWhenNoProducts() {
@@ -118,10 +117,12 @@ class ShoppingServiceImplTest {
         }catch (BuyException exc){
             fail(exc.getMessage());
         }
+        Mockito.verify(productDaoMock, Mockito.never())
+                .save(Mockito.any(Product.class));
     }
 
     /**
-     * Проверка выброса исключения при попытке купить больше единиц товара, чем доступно
+     * Проверка выброса исключения и отсутствия покупки при попытке купить больше единиц товара, чем доступно
      */
     @Test
     void throwBuyTooMany(){
@@ -131,11 +132,13 @@ class ShoppingServiceImplTest {
         product.subtractCount(4);
 
         Assertions.assertThrows(BuyException.class, () -> shoppingService.buy(cart));
+        Mockito.verify(productDaoMock, Mockito.never())
+                .save(Mockito.any(Product.class));
     }
 
 
     /**
-     * Проверка успешного сохранения через Dao
+     * Проверка успешного сохранения факта покупки через Dao
      */
     @Test
     void saveProduct() {
